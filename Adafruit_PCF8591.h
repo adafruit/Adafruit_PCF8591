@@ -24,7 +24,7 @@
 #include <Adafruit_I2CDevice.h>
 
 #define PCF8591_DEFAULT_ADDR 0x48 /**< PCF8591 Default Address */
-
+#define PCF8591_ENABLE_DAC 0x40   ///< control bit for having the DAC active
 /**
  * Driver for the Adafruit PCF8591 Combo ADC + DAC
  */
@@ -33,10 +33,14 @@ public:
   Adafruit_PCF8591(void);
 
   bool begin(uint8_t i2caddr = PCF8591_DEFAULT_ADDR, TwoWire *theWire = &Wire);
-
+  void enableDAC(bool enable);
+  uint8_t analogRead(uint8_t adcnum);
+  void analogWrite(uint8_t output);
 
 private:
   Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to I2C bus interface
+  uint8_t _dacval = 0;
+  bool _dacenable = false;
 };
 
 #endif

@@ -30,8 +30,7 @@
 /*!
  * @brief  PCF8591 constructor
  */
-Adafruit_PCF8591::Adafruit_PCF8591(void) {
-}
+Adafruit_PCF8591::Adafruit_PCF8591(void) {}
 
 /**
  * Initialises the I2C bus, and finds the PCF8591 on the bus
@@ -52,4 +51,52 @@ bool Adafruit_PCF8591::begin(uint8_t i2caddr, TwoWire *theWire) {
   }
 
   return true;
+}
+
+/**
+ * Enables the DAC output or sets it to tri-state / high-Z
+ *
+ * @param enable Flag for desired DAC state
+ */
+void Adafruit_PCF8591::enableDAC(bool enable) {
+  _dacenable = enable;
+  this->analogWrite(_dacval);
+}
+
+/**
+ * Writes a uint8_t value to the DAC output
+ *
+ * @param output The value to write: 0 is GND and 255 is VCC
+ */
+void Adafruit_PCF8591::analogWrite(uint8_t output) {
+  uint8_t buffer[2] = {0, 0};
+  if (_dacenable) {
+    buffer[0] = PCF8591_ENABLE_DAC;
+    buffer[1] = output;
+  }
+  _dacval = output;
+  i2c_dev->write(buffer, 2);
+}
+
+/**
+ * Read an analog value from one of the four ADC inputs
+ *
+ * @param adcnum The single-ended ADC to read from, 0 thru 3
+ * @return The value read: 0 is GND and 255 is VCC
+ */
+uint8_t Adafruit_PCF8591::analogRead(uint8_t adcnum) {
+  // we'll reuse the same buffer
+  uint8_t buffer[2] = {0, 0};
+
+  if (_dacenable) {
+    buffer[0] = PCF8591_ENABLE_DAC;
+    buffer[1] = _dacval;
+  }
+
+  // adcnum cannot be larger than 3
+  adcnum = min(adcnum, 3);
+  buffer[0] |= (adcnum & 0x3);
+
+  i2c_dev->write_then_read(buffer, 2, buffer, 2);
+  return buffer[1];
 }
