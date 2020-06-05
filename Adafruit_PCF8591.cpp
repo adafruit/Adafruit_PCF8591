@@ -94,7 +94,7 @@ uint8_t Adafruit_PCF8591::analogRead(uint8_t adcnum) {
   }
 
   // adcnum cannot be larger than 3
-  adcnum = min(adcnum, 3);
+  adcnum = min(adcnum, (uint8_t)3);
   buffer[0] |= (adcnum & 0x3);
 
   i2c_dev->write_then_read(buffer, 2, buffer, 2);
