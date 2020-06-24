@@ -2,7 +2,9 @@
 
 This is the Adafruit PCF8591 Arduino Library for Arduino
 Tested and works great with the Adafruit PCF8591 Breakout Board
+
 [<img src="assets/board.png?raw=true" width="500px">](https://www.adafruit.com/products/4648)
+
 Adafruit invests time and resources providing this open source code, please support Adafruit and open-source hardware by purchasing products from Adafruit!
 
 # Installation
