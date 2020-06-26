@@ -85,6 +85,23 @@ void Adafruit_PCF8591::analogWrite(uint8_t output) {
  * @return The value read: 0 is GND and 255 is VCC
  */
 uint8_t Adafruit_PCF8591::analogRead(uint8_t adcnum) {
+  _halfRead(adcnum);        // trigger the measurement
+  return _halfRead(adcnum); // read the result
+}
+
+/**
+ * Reads then writes from the PCF8591. Must be called twice
+ * with the same arguments to receive the correct reading.
+ *
+ * The result from the measurement triggered by the first write
+ * isn't returned until the second read.
+ *
+ * See section 8.4 "A/D Conversion" in the datasheet for more info:
+ * https://www.nxp.com/docs/en/data-sheet/PCF8591.pdf
+ * @param adcnum The single-ended ADC to read from, 0 thru 3
+ * @return The value read: 0 is GND and 255 is VCC
+ */
+uint8_t Adafruit_PCF8591::_halfRead(uint8_t adcnum) {
   // we'll reuse the same buffer
   uint8_t buffer[2] = {0, 0};
 

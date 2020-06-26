@@ -41,6 +41,7 @@ private:
   Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to I2C bus interface
   uint8_t _dacval = 0;
   bool _dacenable = false;
+  uint8_t _halfRead(uint8_t adcnum);
 };
 
 #endif
